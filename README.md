@@ -1,93 +1,145 @@
-# Smart Building Vibration Control Using Fuzzy PID
+# Privacy-Preserving Distributed Control
 
-Active vibration control of a three-story building subjected to seismic excitation using a **Fuzzy PID controller**. The project investigates structural response reduction through intelligent control, with particular emphasis on controller performance and sensor placement.
+A privacy-preserving distributed control framework for a **2-DOF vibrating mechanical system** using an **encrypted PID controller** and **Shamir's Secret Sharing** for secure multiparty computation.
 
-The complete model and simulations are implemented using **MATLAB/Simulink**.
+The project investigates how control computation can be performed in a distributed/cloud-based environment while reducing the exposure of sensitive system information.
+
+Implementations and supporting codes are provided in **Python/Jupyter Notebook, SageMath, and MATLAB**.
 
 ---
 
 ## Overview
 
-Buildings subjected to seismic excitation can experience significant lateral vibrations and structural responses. Active structural control provides a way to mitigate these responses by applying a control force based on measured structural states.
+Modern control systems increasingly rely on distributed and cloud-based computation. While this architecture provides computational and communication advantages, transferring system states and control-related information to external computing nodes can introduce privacy and security concerns.
 
-This project develops and evaluates an active vibration control framework for a **three-story building model** under seismic excitation.
+This project studies a privacy-preserving control architecture in which sensitive control information is protected using cryptographic techniques while the controller operates in a distributed computational environment.
 
-A **Fuzzy PID controller** is implemented to regulate the structural response and reduce vibration compared with the uncontrolled building.
+The proposed framework combines:
 
-The project also investigates the influence of **sensor placement** on the performance of the control system.
+* Distributed control
+* Encrypted control computation
+* Shamir's Secret Sharing
+* Secure Multiparty Computation (SMPC)
+* PID control
+* Numerical simulation of mechanical vibration
+* Newmark time-integration method
 
----
-
-## Objectives
-
-The main objectives of this project are:
-
-* Modeling the dynamic behavior of a three-story building
-* Simulating the building response under seismic excitation
-* Designing an active vibration control system
-* Implementing a Fuzzy PID controller
-* Investigating the effect of sensor placement
-* Comparing controlled and uncontrolled structural responses
-* Evaluating vibration reduction in terms of displacement and acceleration
-* Developing the complete simulation framework in MATLAB/Simulink
+The framework is demonstrated on a **two-degree-of-freedom vibrating system**.
 
 ---
 
-## System Model
+## Key Features
 
-The structure is represented by a simplified **three-degree-of-freedom building model**, where each degree of freedom represents the lateral motion of a story.
+* 🔐 **Privacy-preserving control computation**
+* 🤝 **Secure multiparty computation**
+* 🔑 **Shamir's Secret Sharing**
+* 🎛️ **Encrypted PID controller**
+* ⚙️ **2-DOF mechanical vibration model**
+* 📐 **Newmark numerical integration**
+* 🐍 **Python / Jupyter implementation**
+* 🔢 **SageMath cryptographic computation**
+* 🧮 **MATLAB dynamic-system simulation**
 
-The general structural dynamics can be represented in state-space form as:
+---
+
+## System Architecture
+
+The overall concept can be summarized as:
+
+```text
+             Physical System
+                   │
+                   │ System States
+                   ▼
+          ┌─────────────────┐
+          │   Measurement   │
+          └────────┬────────┘
+                   │
+                   ▼
+          ┌─────────────────┐
+          │ Privacy /       │
+          │ Secret Sharing  │
+          └────────┬────────┘
+                   │
+        ┌──────────┼──────────┐
+        │          │          │
+        ▼          ▼          ▼
+     Node 1     Node 2     Node N
+        │          │          │
+        └──────────┼──────────┘
+                   │
+                   ▼
+       Secure Distributed
+        Control Computation
+                   │
+                   ▼
+          Encrypted PID
+             Controller
+                   │
+                   ▼
+             Control Input
+                   │
+                   ▼
+          ┌─────────────────┐
+          │  2-DOF System   │
+          │   Dynamics      │
+          └─────────────────┘
+```
+
+The main objective is to perform the required control computation without directly exposing the sensitive system information to individual computational parties.
+
+---
+
+## Mechanical System
+
+The controlled plant is modeled as a **two-degree-of-freedom vibrating mechanical system**.
+
+The generalized coordinates can be represented as:
 
 $$
-\dot{\mathbf{x}} =
-A\mathbf{x} + B\mathbf{u} + E\mathbf{w}
+\mathbf{x}
+=
+\begin{bmatrix}
+x_1 \\
+x_2
+\end{bmatrix}
+$$
+
+with corresponding velocities:
+
+$$
+\dot{\mathbf{x}}
+=
+\begin{bmatrix}
+\dot{x}_1 \\
+\dot{x}_2
+\end{bmatrix}
+$$
+
+The system dynamics can generally be represented in matrix form as:
+
+$$
+M\ddot{x}+C\dot{x}+Kx=Bu
 $$
 
 where:
 
-* \(\mathbf{x}\) is the structural state vector
-* \(A\) is the system matrix
-* \(B\) is the control input matrix
-* \(\mathbf{u}\) is the control force
-* \(E\) represents the influence of the seismic excitation
-* \(\mathbf{w}\) represents the external ground excitation
+* \(M\) is the mass matrix
+* \(C\) is the damping matrix
+* \(K\) is the stiffness matrix
+* \(x\) is the displacement vector
+* \(u\) is the control input
+* \(B\) is the control-input matrix
 
-The controller receives structural response information through the selected sensor configuration and generates the corresponding control action.
-
----
-
-## Seismic Excitation
-
-The building is subjected to an external seismic excitation, and the structural response is evaluated both **without control** and **with active control**.
-
-The comparison focuses on the resulting structural vibration, particularly:
-
-* Story displacement
-* Structural acceleration
-* Overall vibration response
-
-This provides a direct assessment of the effect of the active controller on the building response.
+The numerical response of the system is evaluated using the **Newmark method**.
 
 ---
 
-## Fuzzy PID Controller
+## PID Control
 
-The control strategy combines the conventional PID control structure with a fuzzy inference mechanism.
+The baseline controller is based on the classical PID structure.
 
-A conventional PID controller is based on the error:
-
-$$
-e(t)=r(t)-y(t)
-$$
-
-and its derivative:
-
-$$
-\dot e(t)=\frac{de(t)}{dt}
-$$
-
-The PID control law can be expressed as:
+For a tracking error \(e(t)\), the control input is expressed as:
 
 $$
 u(t)
@@ -99,190 +151,250 @@ K_I\int e(t)\,dt
 K_D\frac{de(t)}{dt}
 $$
 
-In the Fuzzy PID approach, fuzzy logic is used to determine or adjust the controller behavior based on the system error and its variation.
+where:
 
-This provides a nonlinear control mechanism that can adapt the control action according to the instantaneous structural response.
+* \(K_P\) is the proportional gain
+* \(K_I\) is the integral gain
+* \(K_D\) is the derivative gain
 
----
-
-## Sensor Placement
-
-An important part of the project is the investigation of **sensor placement**.
-
-The location of the measured structural response can influence the information available to the controller and consequently affect the control performance.
-
-Different sensor configurations are therefore considered to investigate their effect on:
-
-* Structural displacement
-* Structural acceleration
-* Controller response
-* Overall vibration reduction
+In this project, the control computation is combined with privacy-preserving cryptographic operations.
 
 ---
 
-## Simulation Framework
+## Privacy-Preserving Control
 
-The project is implemented using:
+A central component of the project is the use of **Shamir's Secret Sharing**.
 
-**MATLAB**
+Instead of directly transmitting sensitive control variables to a single computational entity, secret information can be divided into multiple shares.
+
+Conceptually:
+
+```text
+              Secret Value
+                   │
+                   ▼
+          ┌─────────────────┐
+          │ Secret Sharing  │
+          └────────┬────────┘
+                   │
+        ┌──────────┼──────────┐
+        ▼          ▼          ▼
+      Share 1    Share 2    Share N
+        │          │          │
+        ▼          ▼          ▼
+     Party 1    Party 2    Party N
+        │          │          │
+        └──────────┼──────────┘
+                   │
+                   ▼
+          Secure Computation
+                   │
+                   ▼
+          Reconstructed Result
+```
+
+The purpose is to allow distributed computation while preventing any individual party from obtaining the original secret directly.
+
+---
+
+## Secure Multiparty Computation
+
+The cryptographic layer is designed around the concept of **Secure Multiparty Computation (SMPC)**.
+
+The participating computational nodes jointly perform the required operations while keeping the underlying sensitive information protected.
+
+The project therefore connects two traditionally separate areas:
+
+**Control Engineering**
+
+$$
+\text{System Modeling}
+\rightarrow
+\text{State Measurement}
+\rightarrow
+\text{PID Control}
+$$
 
 and
 
-**Simulink**
+**Privacy-Preserving Computation**
 
-The simulation workflow consists of:
+$$
+\text{Secret Sharing}
+\rightarrow
+\text{Distributed Computation}
+\rightarrow
+\text{Secure Control Result}
+$$
 
-```text
-Seismic Excitation
-        │
-        ▼
-┌──────────────────┐
-│  Building Model  │
-│    3 Stories     │
-└────────┬─────────┘
-         │
-         ▼
-   Structural Response
-         │
-         ▼
-   Sensor Measurement
-         │
-         ▼
-┌──────────────────┐
-│   Fuzzy PID      │
-│    Controller    │
-└────────┬─────────┘
-         │
-         ▼
-    Control Force
-         │
-         └──────────────► Building
-```
+The combination provides a framework for investigating privacy-aware distributed control systems.
 
 ---
 
-## Results
+## Numerical Integration
 
-The controlled and uncontrolled responses are compared to evaluate the effectiveness of the proposed control strategy.
+The mechanical dynamics are simulated using the **Newmark method**, a widely used numerical time-integration approach for structural and mechanical dynamic systems.
 
-According to the results reported for this project, the active Fuzzy PID control strategy can achieve **up to approximately 85% reduction in displacement and acceleration responses** compared with the uncontrolled case, depending on the response quantity and sensor configuration.
-
-The results demonstrate the potential of fuzzy PID control for reducing seismic-induced vibration in the modeled three-story structure.
-
-> **Note:** The reported reduction represents the results of the specific simulation cases included in this project and should not be interpreted as a universal performance guarantee for other building models or seismic records.
+The numerical simulation is used to evaluate the time-domain response of the 2-DOF system under the applied control strategy.
 
 ---
 
-## Project Structure
+## Software and Tools
 
-The current repository contains the main project implementation inside:
+The repository contains implementations across multiple computational environments:
+
+| Environment          | Purpose                                          |
+| -------------------- | ------------------------------------------------ |
+| **MATLAB**           | Dynamic-system modeling and numerical simulation |
+| **Python / Jupyter** | Computational experiments and analysis           |
+| **SageMath**         | Cryptographic and secret-sharing computations    |
+
+---
+
+## Repository Structure
 
 ```text
-smart control of building (Vibration Control)/
-```
-
-The directory contains the MATLAB/Simulink files associated with the building vibration-control study.
-
-A simplified representation of the repository is:
-
-```text
-smart-control-of-building-Vibration-Control/
+Privacy-Preserving-Distributed-Control/
 │
-├── smart control of building (Vibration Control)/
-│   ├── MATLAB files
-│   ├── Simulink models
-│   └── Supporting project files
+├── Privacy-Preserving-Distributed-Control/
+│   ├── Python / Jupyter notebooks
+│   ├── SageMath implementations
+│   ├── MATLAB scripts
+│   └── Supporting files
 │
 └── README.md
 ```
 
----
-
-## Software
-
-The project was developed using:
-
-* **MATLAB**
-* **Simulink**
-* Fuzzy Logic control modeling
-* Dynamic system simulation
-* Structural vibration analysis
+The implementations are organized around the different computational components of the privacy-preserving control framework.
 
 ---
 
-## Key Topics
+## Workflow
 
-This project covers several topics in structural dynamics and control:
+A typical computational workflow is:
 
-* Structural Dynamics
-* Earthquake Engineering
-* Seismic Response
-* Vibration Control
-* Active Structural Control
-* Fuzzy Logic Control
-* PID Control
-* Fuzzy PID Control
-* Sensor Placement
-* State-Space Modeling
-* MATLAB
-* Simulink
+```text
+1. Define the mechanical system
+             │
+             ▼
+2. Model the 2-DOF dynamics
+             │
+             ▼
+3. Define the PID controller
+             │
+             ▼
+4. Protect sensitive variables
+   using secret sharing
+             │
+             ▼
+5. Perform distributed /
+   secure computation
+             │
+             ▼
+6. Obtain the control input
+             │
+             ▼
+7. Integrate system dynamics
+   using Newmark method
+             │
+             ▼
+8. Evaluate system response
+```
 
 ---
 
-## How to Run
+## Research Topics
+
+This project lies at the intersection of several research areas:
+
+* **Distributed Control**
+* **Privacy-Preserving Control**
+* **Cyber-Physical Systems**
+* **Secure Multiparty Computation**
+* **Secret Sharing**
+* **Control Systems**
+* **PID Control**
+* **Mechanical Vibrations**
+* **Structural Dynamics**
+* **Cloud-Based Control**
+* **Cryptographic Computing**
+* **Numerical Time Integration**
+
+---
+
+## Motivation
+
+Cloud-based and distributed control architectures can provide computational flexibility and scalability, but they may also require sensitive system information to be shared across computational nodes.
+
+Privacy-preserving techniques provide a potential approach for reducing direct exposure of such information.
+
+This project explores this concept through the integration of:
+
+$$
+\boxed{
+\text{Distributed Control}
++
+\text{Cryptography}
++
+\text{Mechanical Dynamics}
+}
+$$
+
+with a 2-DOF vibrating system serving as the computational case study.
+
+---
+
+## Limitations
+
+This repository represents a computational study of privacy-preserving distributed control using a simplified mechanical system.
+
+The results should therefore be interpreted within the assumptions and modeling choices implemented in the provided MATLAB, Python/Jupyter, and SageMath codes.
+
+The framework is intended as a research and educational implementation rather than a production-ready secure control platform.
+
+---
+
+## Getting Started
 
 ### Requirements
 
+Depending on the part of the project being used, the following software may be required:
+
 * MATLAB
-* Simulink
-* Required MATLAB/Simulink toolboxes for the included models
+* Python
+* Jupyter Notebook
+* SageMath
 
-### Workflow
+Additional MATLAB toolboxes or Python packages may be required by individual scripts or notebooks.
 
-1. Clone the repository:
+### Clone the Repository
 
 ```bash
-git clone https://github.com/EmadKianasl/smart-control-of-building-Vibration-Control.git
+git clone https://github.com/EmadKianasl/Privacy-Preserving-Distributed-Control.git
 ```
 
-2. Open MATLAB.
+Then navigate to the project directory:
 
-3. Navigate to:
-
-```text
-smart control of building (Vibration Control)/
+```bash
+cd Privacy-Preserving-Distributed-Control
 ```
 
-4. Open the corresponding Simulink model.
-
-5. Run the simulation and compare the controlled and uncontrolled structural responses.
+Open the relevant MATLAB scripts, Jupyter notebooks, or SageMath files according to the component you want to reproduce.
 
 ---
 
-## Results and Visualization
+## Academic Scope
 
-The project produces time-history responses that can be used to compare the structural behavior before and after applying active vibration control.
+This project is focused on the integration of **control engineering and privacy-preserving computation**.
 
-Typical outputs include:
+It can serve as a starting point for further investigation of:
 
-* Story displacement response
-* Story acceleration response
-* Controlled response
-* Uncontrolled response
-* Controller response
-* Comparison of different sensor configurations
-
----
-
-## Academic Context
-
-This repository contains an academic engineering project focused on the application of intelligent control techniques to structural vibration problems.
-
-**Application:** Active vibration control of building structures
-**Structure:** Three-story building model
-**Excitation:** Seismic excitation
-**Controller:** Fuzzy PID
-**Software:** MATLAB / Simulink
+* Privacy-preserving feedback control
+* Secure cloud-based control
+* Distributed controller architectures
+* Cryptographic control systems
+* Secure cyber-physical systems
+* Privacy-aware multi-agent control
 
 ---
 
@@ -300,4 +412,4 @@ Isfahan University of Technology
 
 This repository is provided primarily for **academic and educational purposes**.
 
-Please refer to the repository files for the original MATLAB/Simulink implementation and project materials.
+Please refer to the source files for the implementation details and computational experiments.
